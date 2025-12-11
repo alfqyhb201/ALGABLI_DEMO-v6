@@ -14,7 +14,7 @@ class CreateUsersTable extends Migration
             
             //## Basic fields - الحقول الأساسية
             $table->bigIncrements('id');
-            $table->char('uuid', 36)->unique()->default(DB::raw('(UUID())')); //green Unique identifier for sync - معرف فريد للمزامنة
+            $table->char('uuid', 36)->unique()->nullable(); //green Unique identifier for sync - معرف فريد للمزامنة
             $table->string('name'); //green Full name - الاسم الكامل
             $table->string('username')->nullable()->unique(); //green Username for login - اسم المستخدم لتسجيل الدخول
             $table->string('email')->nullable()->unique(); //green Email address - البريد الإلكتروني
