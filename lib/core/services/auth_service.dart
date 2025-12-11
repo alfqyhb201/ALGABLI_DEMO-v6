@@ -125,4 +125,56 @@ class AuthService {
   Future<bool> isLoggedIn() async {
     return await _storage.containsKey(key: 'auth_token');
   }
+
+  Future<Map<String, dynamic>> changePassword(
+    String currentPassword,
+    String newPassword,
+    String newPasswordConfirmation,
+  ) async {
+    try {
+      final token = await getToken();
+      if (token == null) {
+        return {'success': false, 'message': 'User not authenticated'};
+      }
+
+      final response = await http.post(
+        Uri.parse('$_baseUrl/change-password'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+        body: jsonEncode({
+          'current_password': currentPassword,
+          'new_password': newPassword,
+          'new_password_confirmation': newPasswordConfirmation,
+        }),
+      );
+
+      final data = jsonDecode(response.body);
+
+      if (response.statusCode == 200) {
+        // Update stored password for offline access
+        final username = await _storage.read(key: 'last_user');
+        if (username != null) {
+          await _storage.write(key: 'password_$username', value: newPassword);
+          if (data['password_hash'] != null) {
+            await _storage.write(
+              key: 'password_hash_$username',
+              value: data['password_hash'],
+            );
+          }
+        }
+        return {'success': true, 'message': data['message']};
+      } else {
+        return {
+          'success': false,
+          'message': data['message'] ?? 'Failed to change password',
+          'errors': data['errors'],
+        };
+      }
+    } catch (e) {
+      return {'success': false, 'message': 'Connection error: $e'};
+    }
+  }
 }
