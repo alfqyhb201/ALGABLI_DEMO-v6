@@ -65,7 +65,7 @@ class SettingsScreen extends ConsumerWidget {
             context,
             icon: Icons.lock_outline,
             title: 'تغيير كلمة المرور',
-            onTap: () {}, // TODO: Implement change password
+            onTap: () => context.push('/settings/change-password'),
             iconColor: Colors.redAccent,
           ),
 

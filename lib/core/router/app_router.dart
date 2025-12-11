@@ -26,6 +26,7 @@ import '../../features/manager/screens/team_performance_screen.dart';
 import '../../features/manager/screens/manager_reports_screen.dart';
 import '../../features/manager/screens/user_management_screen.dart';
 import '../../features/settings/presentation/sync_settings_screen.dart';
+import '../../features/settings/presentation/change_password_screen.dart';
 import '../layout/main_layout.dart';
 
 import '../../core/services/auth_service.dart';
@@ -87,6 +88,10 @@ GoRouter goRouter(Ref ref) {
           GoRoute(
             path: 'sync',
             builder: (context, state) => const SyncSettingsScreen(),
+          ),
+          GoRoute(
+            path: 'change-password',
+            builder: (context, state) => const ChangePasswordScreen(),
           ),
         ],
       ),
